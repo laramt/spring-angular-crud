@@ -10,6 +10,7 @@ import com.project.crud.model.Course;
 import com.project.crud.repositories.CourseRepository;
 import com.project.crud.services.CourseService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,9 +40,12 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("No course with id: " + id));
+            
+        repository.deleteById(id);
     }
 
     @Override
