@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.crud.dtos.CourseDTO;
 import com.project.crud.mappers.CourseMapper;
+import com.project.crud.model.Course;
 import com.project.crud.repositories.CourseRepository;
 import com.project.crud.services.CourseService;
 
@@ -31,8 +32,10 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public CourseDTO findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        Course course = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("No course with id: " + id));
+        
+        return mapper.toCourseDTO(course);
     }
 
     @Override
