@@ -24,15 +24,19 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     private String description;
 
+    @Column(nullable = false)
     private String professor;
     
+    @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
 
+    @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
 

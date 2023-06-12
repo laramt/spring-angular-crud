@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.project.crud.dtos.CourseDTO;
 import com.project.crud.services.CourseService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,7 +27,7 @@ public class CourseResource {
     private final CourseService service;
 
     @PostMapping("/new-course")
-    public ResponseEntity<CourseDTO> insert(@RequestBody CourseDTO dto){
+    public ResponseEntity<CourseDTO> insert(@RequestBody @Valid CourseDTO dto){
         dto = service.insert(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
