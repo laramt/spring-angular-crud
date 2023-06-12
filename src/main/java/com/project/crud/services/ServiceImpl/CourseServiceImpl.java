@@ -21,9 +21,10 @@ public class CourseServiceImpl implements CourseService{
     private final CourseMapper mapper;
 
     @Override
+    @Transactional
     public CourseDTO insert(CourseDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+        Course course = repository.save(mapper.toCourse(dto));
+        return mapper.toCourseDTO(course);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class CourseServiceImpl implements CourseService{
     public void delete(Long id) {
         repository.findById(id)
             .orElseThrow(() -> new RuntimeException("No course with id: " + id));
-            
+
         repository.deleteById(id);
     }
 
