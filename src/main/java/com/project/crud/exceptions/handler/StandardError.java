@@ -1,4 +1,4 @@
-package com.project.crud.exceptions;
+package com.project.crud.exceptions.handler;
 
 import java.io.Serializable;
 import java.time.Instant;
