@@ -23,7 +23,20 @@ public class CourseServiceImpl implements CourseService{
     @Override
     @Transactional
     public CourseDTO insert(CourseDTO dto) {
-        Course course = repository.save(mapper.toCourse(dto));
+        Course course = mapper.toCourse(dto);
+        if(course.getName() == null || course.getDescription() == null || course.getProfessor() == null){
+            throw new RuntimeException("Course filds cannot be null.");
+        }
+
+        if(course.getDescription().length() < 100 || course.getDescription().length() > 500){
+            throw new RuntimeException("Description must be between 100 and 500 characters.");
+        }
+
+        if(course.getEndDate().isBefore(course.getStartDate())){
+            throw new RuntimeException("End date must be after start date.");
+        }
+
+        repository.save(course);
         return mapper.toCourseDTO(course);
     }
 
