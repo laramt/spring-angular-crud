@@ -13,6 +13,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -24,19 +27,21 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
 
+    @NotBlank
+    @Size(min = 100, max = 500, message = "Description must be between {min} and {max} characters.")
     private String description;
 
-    @Column(nullable = false)
+    @NotBlank
     private String professor;
     
-    @Column(nullable = false)
+    @NotNull
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @NotNull
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
 
