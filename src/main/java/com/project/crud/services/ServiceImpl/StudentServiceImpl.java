@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.project.crud.dtos.StudentDTO;
+import com.project.crud.exceptions.ResourceNotFoundException;
 import com.project.crud.mappers.StudentMapper;
+import com.project.crud.model.Student;
 import com.project.crud.repositories.StudentRepository;
 import com.project.crud.services.StudentService;
 
@@ -31,8 +33,9 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public StudentDTO findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+       Student student  = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("No course with id: " + id));
+       return mapper.toCourseDTO(student);
     }
 
     @Override
