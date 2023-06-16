@@ -17,17 +17,17 @@ public class StudentMapper {
 
     private final ModelMapper mapper;
 
-    public Student toCourse(StudentDTO dto){
+    public Student toStudent(StudentDTO dto){
         return mapper.map(dto, Student.class);
     }
 
-    public StudentDTO toCourseDTO(Student entity){
+    public StudentDTO toStudentDTO(Student entity){
         return mapper.map(entity, StudentDTO.class);
     }
 
     public List<StudentDTO> toStudentDTOList(List<Student> students) {
         return students.stream()
-                .map(this::toCourseDTO)
+                .map(this::toStudentDTO)
                 .collect(Collectors.toList());
     }
     

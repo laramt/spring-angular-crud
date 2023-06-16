@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.project.crud.dtos.StudentDTO;
+import com.project.crud.exceptions.InvalidInputException;
 import com.project.crud.exceptions.ResourceNotFoundException;
 import com.project.crud.mappers.StudentMapper;
 import com.project.crud.model.Student;
@@ -22,8 +23,14 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public StudentDTO insert(StudentDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+         Student student = mapper.toStudent(dto);
+        
+        if(student.getName() == null || student.getMajor() == null || student.getBirthDate() == null){
+            throw new InvalidInputException("Student filds cannot be null.");
+        }
+
+         repository.save(student);
+         return mapper.toStudentDTO(student);
     }
 
     @Override
@@ -35,7 +42,7 @@ public class StudentServiceImpl implements StudentService{
     public StudentDTO findById(Long id) {
        Student student  = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("No course with id: " + id));
-       return mapper.toCourseDTO(student);
+       return mapper.toStudentDTO(student);
     }
 
     @Override
