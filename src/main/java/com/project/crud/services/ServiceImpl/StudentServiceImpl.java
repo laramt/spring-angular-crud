@@ -40,8 +40,9 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("No course with id: " + id));
+        repository.deleteById(id);
     }
 
     @Override
