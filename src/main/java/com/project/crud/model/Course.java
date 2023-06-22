@@ -36,7 +36,7 @@ public class Course {
     private String name;
 
     @NotBlank
-    @Size(min = 100, max = 500, message = "Description must be between {min} and {max} characters.")
+    @Size(max = 500, message = "Description must be between {min} and {max} characters.")
     private String description;
 
     @NotBlank

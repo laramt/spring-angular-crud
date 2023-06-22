@@ -3,6 +3,7 @@ package com.project.crud.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,12 @@ public class CourseMapper {
         return courses.stream()
                 .map(this::toCourseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public Course updateStudentFromStudentDTO(Course entity, CourseDTO dto){
+    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+    mapper.map(dto, entity);
+    return entity;
     }
 
 }

@@ -66,8 +66,13 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public CourseDTO update(Long id, CourseDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        Course course  = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("No course with id: " + id));
+
+            course = mapper.updateStudentFromStudentDTO(course, dto);
+            repository.save(course);
+
+        return mapper.toCourseDTO(course);
     }
     
 }
