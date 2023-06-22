@@ -1,4 +1,4 @@
-package com.project.crud.services.ServiceImpl;
+package com.project.crud.services.serviceImpl;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.project.crud.services.ServiceImpl;
+package com.project.crud.services.serviceImpl;
 
 import java.util.List;
 
@@ -54,8 +54,13 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public StudentDTO update(Long id, StudentDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        Student student  = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("No course with id: " + id));
+
+            student = mapper.updateStudentFromStudentDTO(student, dto);
+            repository.save(student);
+
+        return mapper.toStudentDTO(student);
     }
     
 }
