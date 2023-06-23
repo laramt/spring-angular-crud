@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.project.crud.dtos.CourseDTO;
 import com.project.crud.dtos.StudentDTO;
 import com.project.crud.services.StudentService;
 
@@ -55,6 +56,11 @@ public class StudentResource {
     @PutMapping(value = "/{id}")
     public ResponseEntity<StudentDTO> update(@PathVariable Long id, @RequestBody StudentDTO dto){
         return ResponseEntity.ok().body(service.update(id, dto));
+    }
+
+        @GetMapping(value = "/{studentId}/courses")
+    public ResponseEntity<List<CourseDTO>> findStudents(@PathVariable Long studentId){
+        return ResponseEntity.ok().body(service.getCoursesByStudentId(studentId));
     }
     
 }

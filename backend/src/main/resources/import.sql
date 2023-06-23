@@ -9,4 +9,5 @@ INSERT INTO student_tb(name, email, birth_date, phone_number, major) VALUES('Sar
 INSERT INTO course_student_tb(course_id, student_id) VALUES(1, 3);
 INSERT INTO course_student_tb(course_id, student_id) VALUES(1, 4);
 INSERT INTO course_student_tb(course_id, student_id) VALUES(2, 1);
+INSERT INTO course_student_tb(course_id, student_id) VALUES(1, 1);
 INSERT INTO course_student_tb(course_id, student_id) VALUES(2, 2);

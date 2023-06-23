@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.project.crud.dtos.CourseDTO;
 import com.project.crud.dtos.StudentDTO;
 import com.project.crud.exceptions.InvalidInputException;
 import com.project.crud.exceptions.ResourceNotFoundException;
+import com.project.crud.mappers.CourseMapper;
 import com.project.crud.mappers.StudentMapper;
 import com.project.crud.model.Student;
 import com.project.crud.repositories.StudentRepository;
@@ -20,6 +22,7 @@ public class StudentServiceImpl implements StudentService{
 
     private final StudentRepository repository;
     private final StudentMapper mapper;
+    private final CourseMapper courseMapper;
 
     @Override
     public StudentDTO insert(StudentDTO dto) {
@@ -61,6 +64,15 @@ public class StudentServiceImpl implements StudentService{
             repository.save(student);
 
         return mapper.toStudentDTO(student);
+    }
+
+    @Override
+    public List<CourseDTO> getCoursesByStudentId(Long studentId) {
+        Student student = repository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + studentId));
+
+        return courseMapper.toCourseDTOList(student.getCourses());
+
     }
     
 }
