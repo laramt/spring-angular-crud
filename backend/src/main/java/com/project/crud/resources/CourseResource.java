@@ -57,5 +57,10 @@ public class CourseResource {
     public ResponseEntity<CourseDTO> update(@PathVariable Long id, @RequestBody CourseDTO dto){
         return ResponseEntity.ok().body(service.update(id, dto));
     }
+
+    @GetMapping(value = "/{courseId}/students")
+    public ResponseEntity<List<StudentDTO>> findStudents(@PathVariable Long courseId){
+        return ResponseEntity.ok().body(service.getStudentsByCourseId(courseId));
+    }
     
 }
