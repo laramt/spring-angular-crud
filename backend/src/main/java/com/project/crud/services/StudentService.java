@@ -13,6 +13,7 @@ public interface StudentService {
     void delete(Long id);
     StudentDTO update(Long id, StudentDTO dto);
     List<CourseDTO> getCoursesByStudentId(Long studentId);
+    void addCoursesToStudent(Long studentId, Long courseId);
 
     
 }

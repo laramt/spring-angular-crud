@@ -10,10 +10,13 @@ import com.project.crud.exceptions.InvalidInputException;
 import com.project.crud.exceptions.ResourceNotFoundException;
 import com.project.crud.mappers.CourseMapper;
 import com.project.crud.mappers.StudentMapper;
+import com.project.crud.model.Course;
 import com.project.crud.model.Student;
+import com.project.crud.repositories.CourseRepository;
 import com.project.crud.repositories.StudentRepository;
 import com.project.crud.services.StudentService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,6 +26,7 @@ public class StudentServiceImpl implements StudentService{
     private final StudentRepository repository;
     private final StudentMapper mapper;
     private final CourseMapper courseMapper;
+    private final CourseRepository courseRepository;
 
     @Override
     public StudentDTO insert(StudentDTO dto) {
@@ -73,6 +77,21 @@ public class StudentServiceImpl implements StudentService{
 
         return courseMapper.toCourseDTOList(student.getCourses());
 
+    }
+
+    @Transactional
+    @Override
+    public void addCoursesToStudent(Long studentId, Long courseId) {
+        Student student = repository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + studentId));
+    
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + courseId));
+        
+        student.getCourses().add(course);
+        course.getStudents().add(student);
+        courseRepository.save(course);
+        repository.save(student);
     }
     
 }

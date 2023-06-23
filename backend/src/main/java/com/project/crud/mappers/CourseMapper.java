@@ -32,10 +32,11 @@ public class CourseMapper {
                 .collect(Collectors.toList());
     }
 
+
     public Course updateStudentFromStudentDTO(Course entity, CourseDTO dto){
-    mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-    mapper.map(dto, entity);
-    return entity;
+        mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        mapper.map(dto, entity);
+        return entity;
     }
 
 }
