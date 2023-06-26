@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import com.project.crud.builder.StudentBuilder;
 import com.project.crud.dtos.CourseDTO;
 import com.project.crud.dtos.StudentDTO;
 import com.project.crud.exceptions.InvalidInputException;
+import com.project.crud.exceptions.ResourceNotFoundException;
 import com.project.crud.mappers.CourseMapper;
 import com.project.crud.mappers.StudentMapper;
 import com.project.crud.model.Course;
@@ -116,4 +118,37 @@ public class StudentServiceImplTest {
         assertEquals(students.get(0).getId(),result.get(0).getId());
     
     }
+
+    @Test
+    public void findByIdShouldReturnStudentDTOWhenIExists(){
+        // Arrange
+        Long id = 1L;
+        Student student = StudentBuilder.createStudent();
+        StudentDTO dto = StudentBuilder.createStudentDTO();
+
+        when(repository.findById(id)).thenReturn(Optional.of(student));
+        when(mapper.toStudentDTO(student)).thenReturn(dto);
+
+        // Act
+        StudentDTO result = service.findById(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(mapper).toStudentDTO(student);
+        verify(repository).findById(id);
+    }
+
+    @Test
+    public void findByIdShouldThrowResourceNotFoudExceptionWhenIdDoesNotExist(){
+        // Arrange
+        Long id = 1L;
+        when(repository.findById(id)).thenThrow(ResourceNotFoundException.class);
+
+        // Assertion
+        assertThrows(ResourceNotFoundException.class, ()-> service.findById(id));
+        verify(repository).findById(id);
+
+    }
+
 }
