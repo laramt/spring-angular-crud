@@ -10,6 +10,7 @@ public class CourseBuilder {
 
 public static Course createCourse(){
     Course course = new Course();
+    course.setId(1L);
     course.setName("Course Name");
     course.setProfessor("Professor");
     course.setStartDate(LocalDate.of(2023, 01, 01));
@@ -21,6 +22,7 @@ public static Course createCourse(){
 
 public static CourseDTO creaCourseDTO(){
     CourseDTO course = new CourseDTO();
+    course.setId(1L);
     course.setName("Course Name");
     course.setProfessor("Professor");
     course.setStartDate(LocalDate.of(2023, 01, 01));
@@ -32,6 +34,7 @@ public static CourseDTO creaCourseDTO(){
 
 public static Course createCourseWithLongerDescription(){
     Course course = new Course();
+    course.setId(1L);
     course.setName("Course Name");
     course.setProfessor("Professor");
     course.setStartDate(LocalDate.of(2023, 01, 01));

@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.project.crud.builder.CourseBuilder;
 import com.project.crud.dtos.CourseDTO;
 import com.project.crud.exceptions.InvalidInputException;
+import com.project.crud.exceptions.ResourceNotFoundException;
 import com.project.crud.mappers.CourseMapper;
 import com.project.crud.model.Course;
 import com.project.crud.repositories.CourseRepository;
@@ -156,4 +157,36 @@ public class CourseServiceImplTest {
         assertEquals(courses.get(0).getName(), result.get(0).getName());
     }
 
+
+    @Test
+    public void findByIdShouldReturnCourseDTOWhenIExists(){
+        // Arrange
+        Long id = 1L;
+        Course course = CourseBuilder.createCourse();
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+
+        when(repository.findById(id)).thenReturn(Optional.of(course));
+        when(mapper.toCourseDTO(course)).thenReturn(dto);
+
+        // Act
+        CourseDTO result = service.findById(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(mapper).toCourseDTO(course);
+        verify(repository).findById(id);
+    }
+
+    @Test
+    public void findByIdShouldThrowResourceNotFoudExceptionWhenIdDoesNotExist(){
+        // Arrange
+        Long id = 1L;
+        when(repository.findById(id)).thenThrow(ResourceNotFoundException.class);
+
+        // Assertion
+        assertThrows(ResourceNotFoundException.class, ()-> service.findById(id));
+        verify(repository).findById(id);
+
+    }
 }
