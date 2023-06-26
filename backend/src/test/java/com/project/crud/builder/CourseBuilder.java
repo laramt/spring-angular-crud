@@ -1,5 +1,6 @@
 package com.project.crud.builder;
 
+
 import java.time.LocalDate;
 
 import com.project.crud.dtos.CourseDTO;
@@ -8,15 +9,25 @@ import com.project.crud.model.Course;
 public class CourseBuilder {
 
 public static Course createCourse(){
-    return new Course(1L, "Course", "Description", "Professor Name",
-                         LocalDate.of(2023, 01, 01), LocalDate.of(2023, 06, 01), null, null, null);
+    Course course = new Course();
+    course.setName("Course Name");
+    course.setProfessor("Professor");
+    course.setStartDate(LocalDate.of(2023, 01, 01));
+    course.setEndDate(LocalDate.of(2023, 05, 01));
+    course.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor elit sit amet, consectetur adipiscing elit");
+
+    return course;
 } 
 
 public static CourseDTO creaCourseDTO(){
-    return new CourseDTO(1L, "Course", "Description", "Professor Name",
-                         LocalDate.of(2023, 01, 01), LocalDate.of(2023, 06, 01));
+    CourseDTO course = new CourseDTO();
+    course.setName("Course Name");
+    course.setProfessor("Professor");
+    course.setStartDate(LocalDate.of(2023, 01, 01));
+    course.setEndDate(LocalDate.of(2023, 05, 01));
+    course.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor elit sit amet, consectetur adipiscing elit");
+
+    return course;
 }
 
 }
-    
-
