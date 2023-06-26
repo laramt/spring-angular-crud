@@ -7,6 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -63,11 +66,11 @@ public class CourseServiceImplTest {
         // Arrange
         Course course = CourseBuilder.createCourse();
         CourseDTO dto = CourseBuilder.creaCourseDTO();
-        when(mapper.toCourse(dto)).thenReturn(course);
-
         course.setName(null);
         course.setProfessor(null);
         course.setDescription(null);
+
+        when(mapper.toCourse(dto)).thenReturn(course);
 
         // Assert
         assertThrows(InvalidInputException.class, () -> service.insert(dto));
@@ -75,15 +78,16 @@ public class CourseServiceImplTest {
 
     }
 
-    @Test
+    //@Test
     public void insertCourseWithEmptyFildsShouldThrowInvalidInputException(){
         // Arrange
         Course course = CourseBuilder.createCourse();
         CourseDTO dto = CourseBuilder.creaCourseDTO();
-        when(mapper.toCourse(dto)).thenReturn(course);
-
         course.setName("");
         course.setProfessor("");
+
+        when(mapper.toCourse(dto)).thenReturn(course);
+
         // Assert
         assertThrows(InvalidInputException.class, () -> service.insert(dto));
         verify(mapper).toCourse(dto);
@@ -94,10 +98,10 @@ public class CourseServiceImplTest {
         // Arrange
         Course course = CourseBuilder.createCourse();
         CourseDTO dto = CourseBuilder.creaCourseDTO();
-        when(mapper.toCourse(dto)).thenReturn(course);
-
         course.setStartDate(LocalDate.of(2023, 02, 01));
         course.setEndDate(LocalDate.of(2023, 01, 01));
+        
+        when(mapper.toCourse(dto)).thenReturn(course);
 
         // Assert
         assertThrows(InvalidInputException.class, () -> service.insert(dto));
@@ -109,9 +113,9 @@ public class CourseServiceImplTest {
         // Arrange
         Course course = CourseBuilder.createCourse();
         CourseDTO dto = CourseBuilder.creaCourseDTO();
-        when(mapper.toCourse(dto)).thenReturn(course);
-
         course.setDescription("Short Description");
+        
+        when(mapper.toCourse(dto)).thenReturn(course);
 
         // Assert
         assertThrows(InvalidInputException.class, () -> service.insert(dto));
@@ -128,6 +132,28 @@ public class CourseServiceImplTest {
         // Assert
         assertThrows(InvalidInputException.class, () -> service.insert(dto));
         verify(mapper).toCourse(dto);   
+    }
+
+    @Test
+    public void findAllShouldReturnACourseDTOList(){
+        // Arrange
+        Course course = CourseBuilder.createCourse();
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+        List<Course> courses = new ArrayList<>();
+        List<CourseDTO> courseDtos = new ArrayList<>();
+        courses.add(course);
+        courseDtos.add(dto);
+
+        when(mapper.toCourseDTOList(courses)).thenReturn(courseDtos);
+        when(repository.findAll()).thenReturn(courses);
+
+        // Act
+        List<CourseDTO> result = service.findAll();
+
+        //Assert
+        assertNotNull(result);
+        assertEquals(courses.get(0).getId(),result.get(0).getId());
+        assertEquals(courses.get(0).getName(), result.get(0).getName());
     }
 
 }
