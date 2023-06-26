@@ -212,4 +212,71 @@ public class CourseServiceImplTest {
         // Assert
         assertThrows(ResourceNotFoundException.class, ()-> service.delete(id));
     }
+
+    @Test 
+    public void updateShouldReturnCourseDTOWhenIdExists(){
+        // Arrange
+        Long id = 1L;
+        Course course = CourseBuilder.createCourse();
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+        
+        when(repository.findById(id)).thenReturn(Optional.of(course));
+        when(mapper.updateStudentFromStudentDTO(course, dto)).thenReturn(course);
+        when(repository.save(course)).thenReturn(course);
+        when(mapper.toCourseDTO(course)).thenReturn(dto);
+
+        // Act
+        CourseDTO result = service.update(id, dto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(dto.getName(), result.getName());
+        assertEquals(dto.getProfessor(), result.getProfessor());
+        assertEquals(dto.getStartDate(), result.getStartDate());
+
+        verify(mapper).toCourseDTO(course);
+        verify(repository).save(course);
+    }
+
+    @Test
+    public void updateShouldThrowResourceNotFoundExeptionWhenIdDoesNotExist(){
+        // Arrange
+        Long id = 1L;
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+        when(repository.findById(id)).thenThrow(ResourceNotFoundException.class);
+
+        // Assert
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, dto));
+
+    }
+
+    //@Test
+    public void updateShouldThrowInvalidInputExceptionWhenFildsAreEmpty(){
+        // Arrange
+        Long id = 1L;
+        Course course = CourseBuilder.createCourse();
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+        course.setName("");
+        course.setProfessor("");
+        
+        when(repository.findById(id)).thenReturn(Optional.of(course));
+
+        // Assert
+        assertThrows(InvalidInputException.class, () -> service.update(id, dto));
+    }
+
+    //@Test
+    public void updateShouldThrowInvalidInputExceptionWhenStartDateIsAfterDueDate(){
+        // Arrange
+        Long id = 1L;
+        Course course = CourseBuilder.createCourse();
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+        course.setStartDate(LocalDate.of(2023, 02, 01));
+        course.setEndDate(LocalDate.of(2023, 01, 01));
+        
+        when(repository.findById(id)).thenReturn(Optional.of(course));
+
+        // Assert
+        assertThrows(InvalidInputException.class, () -> service.update(id, dto));
+    }
 }
