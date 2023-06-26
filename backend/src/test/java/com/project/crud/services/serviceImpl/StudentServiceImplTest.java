@@ -1,8 +1,10 @@
 package com.project.crud.services.serviceImpl;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -149,6 +151,27 @@ public class StudentServiceImplTest {
         assertThrows(ResourceNotFoundException.class, ()-> service.findById(id));
         verify(repository).findById(id);
 
+    }
+
+    @Test
+    public void deleteShouldReturnNothingWhenIdExists(){
+        // Arrange
+        Long id = 1L;
+        when(repository.findById(id)).thenReturn(Optional.of(new Student()));
+        doNothing().when(repository).deleteById(id);
+
+        // Assert
+        assertDoesNotThrow(() -> service.delete(id));
+    }
+
+    @Test
+    public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist(){
+         // Arrange
+        Long id = 1L;
+        when(repository.findById(id)).thenThrow(ResourceNotFoundException.class);
+
+        // Assert
+        assertThrows(ResourceNotFoundException.class, ()-> service.delete(id));
     }
 
 }
