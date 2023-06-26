@@ -30,4 +30,15 @@ public static CourseDTO creaCourseDTO(){
     return course;
 }
 
+public static Course createCourseWithLongerDescription(){
+    Course course = new Course();
+    course.setName("Course Name");
+    course.setProfessor("Professor");
+    course.setStartDate(LocalDate.of(2023, 01, 01));
+    course.setEndDate(LocalDate.of(2023, 05, 01));
+    course.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor elit sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor elit sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor elit sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor elit sit amet, consectetur adipiscing elit Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum dolor elit sit amet, consectetur adipiscing elit");
+
+    return course;
+} 
+
 }
