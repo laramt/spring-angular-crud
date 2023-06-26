@@ -19,12 +19,17 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.project.crud.builder.CourseBuilder;
+import com.project.crud.builder.StudentBuilder;
 import com.project.crud.dtos.CourseDTO;
+import com.project.crud.dtos.StudentDTO;
 import com.project.crud.exceptions.InvalidInputException;
 import com.project.crud.exceptions.ResourceNotFoundException;
 import com.project.crud.mappers.CourseMapper;
+import com.project.crud.mappers.StudentMapper;
 import com.project.crud.model.Course;
+import com.project.crud.model.Student;
 import com.project.crud.repositories.CourseRepository;
+
 
 @SpringBootTest
 public class CourseServiceImplTest {
@@ -34,6 +39,9 @@ public class CourseServiceImplTest {
 
     @Mock
     private CourseMapper mapper;
+
+    @Mock
+    private StudentMapper studentMapper;
 
     @InjectMocks
     private CourseServiceImpl service;
@@ -278,5 +286,41 @@ public class CourseServiceImplTest {
 
         // Assert
         assertThrows(InvalidInputException.class, () -> service.update(id, dto));
+    }
+
+    @Test
+    public void getStudentByCourseShouldReturnListOfStudentDTOs(){
+        // Arrange
+        Long id = 1L;
+        Course course = CourseBuilder.createCourse();
+        Student student = StudentBuilder.createStudent();
+        StudentDTO dto = StudentBuilder.createStudentDTO();
+        List<StudentDTO> studentDTOs = new ArrayList<>();
+        course.getStudents().add(student);
+        studentDTOs.add(dto);
+
+        when(repository.findById(id)).thenReturn(Optional.of(course));
+        when(studentMapper.toStudentDTOList(course.getStudents())).thenReturn(studentDTOs);
+
+        // Act
+        List<StudentDTO> result = service.getStudentsByCourseId(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, course.getStudents().size());
+        assertEquals(1, result.size());
+        assertEquals(course.getStudents().get(0).getName(), result.get(0).getName());
+
+    }
+
+    @Test
+    public void getStudentsByCourseShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist(){
+        // Arrange
+        Long id = 1L;
+
+        when(repository.findById(id)).thenThrow(ResourceNotFoundException.class);
+
+        // Assert
+        assertThrows(ResourceNotFoundException.class, () -> service.getStudentsByCourseId(id));
     }
 }
