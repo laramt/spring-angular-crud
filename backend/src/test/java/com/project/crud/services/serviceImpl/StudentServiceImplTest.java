@@ -6,16 +6,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.project.crud.builder.CourseBuilder;
 import com.project.crud.builder.StudentBuilder;
+import com.project.crud.dtos.CourseDTO;
 import com.project.crud.dtos.StudentDTO;
 import com.project.crud.exceptions.InvalidInputException;
 import com.project.crud.mappers.CourseMapper;
 import com.project.crud.mappers.StudentMapper;
+import com.project.crud.model.Course;
 import com.project.crud.model.Student;
 import com.project.crud.repositories.StudentRepository;
 
@@ -87,5 +93,27 @@ public class StudentServiceImplTest {
     }
 
 
+    @Test
+    public void findAllShouldReturnAStudentDTOList(){
+        // Arrange
+        Student student = StudentBuilder.createStudent();
+        StudentDTO dto = StudentBuilder.createStudentDTO();
+        List<Student> students = new ArrayList<>();
+        List<StudentDTO> studentDTOs = new ArrayList<>();
+        students.add(student);
+        studentDTOs.add(dto);
 
+        when(mapper.toStudentDTOList(students)).thenReturn(studentDTOs);
+        when(repository.findAll()).thenReturn(students);
+
+        // Act
+        List<StudentDTO> result = service.findAll();
+
+        //Assert
+        assertNotNull(result);
+        assertEquals(1, students.size());
+        assertEquals(1, result.size());
+        assertEquals(students.get(0).getId(),result.get(0).getId());
+    
+    }
 }
