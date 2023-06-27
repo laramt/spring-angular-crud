@@ -227,5 +227,30 @@ public class StudentServiceImplTest {
         assertThrows(InvalidInputException.class, () -> service.update(id, dto));
     }
 
+    @Test
+    public void getCourseByStudenthouldReturnListOfCourseDTOs(){
+        // Arrange
+        Long id = 1L;
+        Student student = StudentBuilder.createStudent();
+        Course course = CourseBuilder.createCourse();
+        CourseDTO dto = CourseBuilder.creaCourseDTO();
+        List<CourseDTO> courseDTOs = new ArrayList<>();
+        student.getCourses().add(course);
+        courseDTOs.add(dto);
+
+        when(repository.findById(id)).thenReturn(Optional.of(student));
+        when(courseMapper.toCourseDTOList(student.getCourses())).thenReturn(courseDTOs);
+
+        // Act
+        List<CourseDTO> result = service.getCoursesByStudentId(id);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, student.getCourses().size());
+        assertEquals(1, result.size());
+        assertEquals(student.getCourses().get(0).getName(), result.get(0).getName());
+
+    }
+
 
 }
