@@ -174,4 +174,58 @@ public class StudentServiceImplTest {
         assertThrows(ResourceNotFoundException.class, ()-> service.delete(id));
     }
 
+    @Test 
+    public void updateShouldReturnStudentDTOWhenIdExists(){
+        // Arrange
+        Long id = 1L;
+        Student student = StudentBuilder.createStudent();
+        StudentDTO dto = StudentBuilder.createStudentDTO();
+
+        when(repository.findById(id)).thenReturn(Optional.of(student));
+        when(mapper.toStudentDTO(student)).thenReturn(dto);
+        when(mapper.updateStudentFromStudentDTO(student, dto)).thenReturn(student);
+        when(repository.save(student)).thenReturn(student);
+
+        // Act
+        StudentDTO result = service.update(id, dto);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(dto.getId(), result.getId());
+        assertEquals(dto.getName(), result.getName());
+
+
+        verify(mapper).toStudentDTO(student);
+        verify(repository).save(student);
+    }
+
+    @Test
+    public void updateShouldThrowResourceNotFoundExeptionWhenIdDoesNotExist(){
+        // Arrange
+        Long id = 1L;
+        StudentDTO dto = StudentBuilder.createStudentDTO();
+        when(repository.findById(id)).thenThrow(ResourceNotFoundException.class);
+
+        // Assert
+        assertThrows(ResourceNotFoundException.class, () -> service.update(id, dto));
+
+    }
+
+
+    //@Test
+    public void updateShouldThrowInvalidInputExceptionWhenFildsAreEmpty(){
+        // Arrange
+        Long id = 1L;
+        Student student = StudentBuilder.createStudent();
+        StudentDTO dto = StudentBuilder.createStudentDTO();
+        student.setName("");
+        student.setMajor("");
+        
+        when(repository.findById(id)).thenReturn(Optional.of(student));
+
+        // Assert
+        assertThrows(InvalidInputException.class, () -> service.update(id, dto));
+    }
+
+
 }
