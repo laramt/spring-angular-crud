@@ -27,6 +27,7 @@ import com.project.crud.mappers.CourseMapper;
 import com.project.crud.mappers.StudentMapper;
 import com.project.crud.model.Course;
 import com.project.crud.model.Student;
+import com.project.crud.repositories.CourseRepository;
 import com.project.crud.repositories.StudentRepository;
 
 @SpringBootTest
@@ -34,6 +35,9 @@ public class StudentServiceImplTest {
 
     @Mock
     private StudentRepository repository;
+
+    @Mock
+    private CourseRepository courseRepository;
 
     @Mock
     private StudentMapper mapper;
@@ -250,6 +254,56 @@ public class StudentServiceImplTest {
         assertEquals(1, result.size());
         assertEquals(student.getCourses().get(0).getName(), result.get(0).getName());
 
+    }
+
+    @Test
+    public void addCourseToStudentShoudReturnVoidWhenRequestIdValid(){
+        // Arrange
+        Long studentId = 1L;
+        Long courseId = 1L;
+        Student student = StudentBuilder.createStudent();
+        Course course = CourseBuilder.createCourse();
+
+        when(repository.findById(studentId)).thenReturn(Optional.of(student));
+        when(courseRepository.findById(courseId)).thenReturn(Optional.of(course));
+        when(repository.save(student)).thenReturn(student);
+        when(courseRepository.save(course)).thenReturn(course);
+        
+        // Act
+        service.addCoursesToStudent(studentId, courseId);
+        
+        // Assert
+        assertNotNull(student.getCourses());
+        assertEquals(1, student.getCourses().size());
+
+    }
+
+    @Test
+    public void addCoursesToStudentShouldThrowResourceNotFoundExceptionWhenStudentIdDoesNotExist(){
+        // Arrange
+        Long studentId = 1L;
+        Long courseId = 1L;
+        Student student = StudentBuilder.createStudent();
+
+        when(repository.findById(studentId)).thenThrow(ResourceNotFoundException.class);
+
+        // Assert
+        assertThrows(ResourceNotFoundException.class, () -> service.addCoursesToStudent(studentId, courseId));
+    }
+
+    @Test
+    public void addCoursesToStudentShouldThrowResourceNotFoundExceptionWhenCourseIdDoesNotExist(){
+        // Arrange
+        Long studentId = 1L;
+        Long courseId = 1L;
+        Student student = StudentBuilder.createStudent();
+        Course course = CourseBuilder.createCourse();
+
+        when(repository.findById(studentId)).thenReturn(Optional.of(student));
+        when(courseRepository.findById(courseId)).thenThrow(ResourceNotFoundException.class);
+
+        // Assert
+        assertThrows(ResourceNotFoundException.class, () -> service.addCoursesToStudent(studentId, courseId));
     }
 
 
